@@ -8,11 +8,11 @@ import (
 func Setup(h *handlers.ToDoHandlers) http.Handler {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("POST /todos", func(w http.ResponseWriter, r *http.Request) {})
-	mux.HandleFunc("GET /todos", func(w http.ResponseWriter, r *http.Request) {})
-	mux.HandleFunc("GET /todos/{id}", func(w http.ResponseWriter, r *http.Request) {})
-	mux.HandleFunc("PUT /todos/{id}", func(w http.ResponseWriter, r *http.Request) {})
-	mux.HandleFunc("DELETE /todos/{id}", func(w http.ResponseWriter, r *http.Request) {})
+	mux.HandleFunc("POST /todos", h.Create)
+	mux.HandleFunc("GET /todos", h.GetAll)
+	mux.HandleFunc("GET /todos/{id}", h.GetByID)
+	mux.HandleFunc("PUT /todos/{id}", h.Update)
+	mux.HandleFunc("DELETE /todos/{id}", h.Delete)
 
 	return mux
 }
