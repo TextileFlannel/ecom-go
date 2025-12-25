@@ -9,7 +9,8 @@ todo-app/
 │       └── main.go
 ├── internal/
 │   ├── handlers/            
-│   │   └── handlers.go
+│   │   ├── handlers.go
+│   │   └── handlers_test.go
 │   ├── middleware/          
 │   │   └── middleware.go
 │   ├── models/              
@@ -17,7 +18,8 @@ todo-app/
 │   ├── router/              
 │   │   └── router.go
 │   ├── service/             
-│   │   └── service.go
+│   │   ├── service.go
+│   │   └── service_test.go
 │   └── storage/
 │       ├── storage.go        
 │       └── storage_test.go
