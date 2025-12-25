@@ -5,4 +5,4 @@ docker-up:
 docker-down:
 	docker stop todo-app
 tests:
-	go test ./internal/storage ./internal/service -v -cover
+	go test ./internal/storage ./internal/service ./internal/handlers -v

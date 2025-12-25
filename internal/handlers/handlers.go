@@ -1,18 +1,26 @@
 package handlers
 
 import (
+	"context"
 	"ecom-go/internal/models"
-	"ecom-go/internal/service"
 	"encoding/json"
 	"net/http"
 	"strconv"
 )
 
-type ToDoHandlers struct {
-	service *service.ToDoService
+type Service interface {
+	Create(ctx context.Context, task *models.ToDoRequest) (*models.ToDo, error)
+	GetAll(ctx context.Context) ([]*models.ToDo, error)
+	GetByID(ctx context.Context, id int) (*models.ToDo, error)
+	Update(ctx context.Context, id int, task *models.ToDoRequest) error
+	Delete(ctx context.Context, id int) error
 }
 
-func NewHandlers(service *service.ToDoService) *ToDoHandlers {
+type ToDoHandlers struct {
+	service Service
+}
+
+func NewHandlers(service Service) *ToDoHandlers {
 	return &ToDoHandlers{service: service}
 }
 

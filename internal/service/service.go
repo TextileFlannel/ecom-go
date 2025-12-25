@@ -3,16 +3,23 @@ package service
 import (
 	"context"
 	"ecom-go/internal/models"
-	"ecom-go/internal/storage"
 	"time"
 )
 
-type ToDoService struct {
-	storge *storage.MemoryStorage
+type Storage interface {
+	Create(task *models.ToDoRequest) *models.ToDo
+	GetAll() []*models.ToDo
+	GetByID(id int) (*models.ToDo, error)
+	Update(id int, task *models.ToDoRequest) error
+	Delete(id int) error
 }
 
-func NewService(storge *storage.MemoryStorage) *ToDoService {
-	return &ToDoService{storge: storge}
+type ToDoService struct {
+	storage Storage
+}
+
+func NewService(storage Storage) *ToDoService {
+	return &ToDoService{storage: storage}
 }
 
 func (s *ToDoService) Create(ctx context.Context, task *models.ToDoRequest) (*models.ToDo, error) {
@@ -21,7 +28,7 @@ func (s *ToDoService) Create(ctx context.Context, task *models.ToDoRequest) (*mo
 
 	done := make(chan *models.ToDo, 1)
 	go func() {
-		done <- s.storge.Create(task)
+		done <- s.storage.Create(task)
 	}()
 
 	select {
@@ -38,7 +45,7 @@ func (s *ToDoService) GetAll(ctx context.Context) ([]*models.ToDo, error) {
 
 	done := make(chan []*models.ToDo, 1)
 	go func() {
-		done <- s.storge.GetAll()
+		done <- s.storage.GetAll()
 	}()
 
 	select {
@@ -56,7 +63,7 @@ func (s *ToDoService) GetByID(ctx context.Context, id int) (*models.ToDo, error)
 	done := make(chan *models.ToDo, 1)
 	errCh := make(chan error, 1)
 	go func() {
-		task, err := s.storge.GetByID(id)
+		task, err := s.storage.GetByID(id)
 		if err != nil {
 			errCh <- err
 			return
@@ -80,7 +87,7 @@ func (s *ToDoService) Update(ctx context.Context, id int, task *models.ToDoReque
 
 	done := make(chan error, 1)
 	go func() {
-		done <- s.storge.Update(id, task)
+		done <- s.storage.Update(id, task)
 	}()
 
 	select {
@@ -97,7 +104,7 @@ func (s *ToDoService) Delete(ctx context.Context, id int) error {
 
 	done := make(chan error, 1)
 	go func() {
-		done <- s.storge.Delete(id)
+		done <- s.storage.Delete(id)
 	}()
 
 	select {

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestMemoryStore_Create(t *testing.T) {
+func TestMemoryStorage_Create(t *testing.T) {
 	store := NewMemoryStorage()
 
 	taskReq := &models.ToDoRequest{
