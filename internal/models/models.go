@@ -8,6 +8,7 @@ type ToDo struct {
 }
 
 type ToDoRequest struct {
-	Title string `json:"title"`
-	Body  string `json:"body"`
+	Title  string `json:"title"`
+	Body   string `json:"body"`
+	IsDone bool   `json:"isDone"`
 }

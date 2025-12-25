@@ -19,22 +19,19 @@ func NewMemoryStorage() *MemoryStorage {
 	}
 }
 
-func (s *MemoryStorage) Create(task *models.ToDoRequest) error {
-	if task.Title == "" {
-		return errors.New("Title is required")
-	}
-
+func (s *MemoryStorage) Create(task *models.ToDoRequest) *models.ToDo {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	s.data[s.id] = &models.ToDo{
-		ID:    s.id,
-		Title: task.Title,
-		Body:  task.Body,
+		ID:     s.id,
+		Title:  task.Title,
+		Body:   task.Body,
+		IsDone: task.IsDone,
 	}
 	s.id++
 
-	return nil
+	return s.data[s.id-1]
 }
 
 func (s *MemoryStorage) GetAll() []*models.ToDo {
@@ -55,25 +52,22 @@ func (s *MemoryStorage) GetByID(id int) (*models.ToDo, error) {
 
 	task, ok := s.data[id]
 	if !ok {
-		return nil, errors.New("Not found")
+		return nil, errors.New("not found")
 	}
 	return task, nil
 }
 
 func (s *MemoryStorage) Update(id int, task *models.ToDoRequest) error {
-	if task.Title == "" {
-		return errors.New("Title is required")
-	}
-
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	if _, ok := s.data[id]; !ok {
-		return errors.New("Not found")
+		return errors.New("not found")
 	}
 
 	s.data[id].Title = task.Title
 	s.data[id].Body = task.Body
+	s.data[id].IsDone = task.IsDone
 
 	return nil
 }
@@ -83,7 +77,7 @@ func (s *MemoryStorage) Delete(id int) error {
 	defer s.mu.Unlock()
 
 	if _, ok := s.data[id]; !ok {
-		return errors.New("Not found")
+		return errors.New("not found")
 	}
 
 	delete(s.data, id)
