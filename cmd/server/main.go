@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"ecom-go/internal/handlers"
+	"ecom-go/internal/middleware"
 	"ecom-go/internal/routers"
 	"ecom-go/internal/service"
 	"ecom-go/internal/storage"
@@ -21,9 +22,11 @@ func main() {
 
 	mux := routers.Setup(h)
 
+	handler := middleware.LoggingMiddleware(mux)
+
 	server := &http.Server{
 		Addr:    ":8080",
-		Handler: mux,
+		Handler: handler,
 	}
 
 	go func() {
